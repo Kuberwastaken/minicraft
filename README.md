@@ -4,14 +4,13 @@
 
 [![Minicraft running from an X post](assets/minicraft-in-a-post.jpg)](https://x.com/kuberwastaken/status/2073746364228673886)
 
-No server. No external host (well — *almost*). The game's bytes ride **inside the
-posts themselves** — 18 tweets of compressed text — and a tiny self-contained
-decoder (also just a tweet) reassembles and boots it right in your browser.
+I found this rather cool trick from **[@rebane2001](https://x.com/rebane2001)** on twitter yesterday that sort of reminded me that I was working on this "hard problem" I left 3 months ago of running Minectaft from a tweet.
+
+If you do x.com/compose followed by the URL string on your post itself, it'll open up the compose box with those words clearly printed out! Using this I was able to truncade the instructions and my custom decoder (because it's ~20 tweets that need to be consolidated) base64 encoded
+
+Is it useful? No, is it a really fun sunday hack that made me smile? sure
 
 ▶️ **[See it live on X →](https://x.com/kuberwastaken/status/2073746364228673886)**
-
-Shoutout to **[@rebane2001](https://x.com/rebane2001)** — the compose-link trick that
-kicked this whole rabbit hole off is theirs.
 
 ---
 
@@ -24,8 +23,6 @@ Three ways, easiest first:
    it shows, and paste it into your browser's address bar → that's the decoder. Hit
    **auto-fill from github**, then **Play**.
 3. **By hand:** in the decoder, paste tweets 3–20 (the raw chunks) yourself, then Play.
-
-Everything runs locally in your browser. Nothing leaves your machine.
 
 ---
 
@@ -138,4 +135,5 @@ The full measured notes live in **[`FINDINGS.md`](FINDINGS.md)**.
 - Minecraft is © **Mojang / Microsoft**. This is an unaffiliated technical-art demo, not
   endorsed by them.
 - The compose-link trick: **[@rebane2001](https://x.com/rebane2001)**.
+- [Minectaft Classic Forever](https://github.com/ManiaDevelopment/Minecraft-Classic-Forever) - Goats for helping me find the actual source to play with
 - Made with funmaxxing by **[Kuber Mehta](https://kuber.studio)**.

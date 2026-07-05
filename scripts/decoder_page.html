@@ -5,8 +5,7 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;color:#fff;font-family:system-ui,Arial,sans-serif;
-  background:#12161c;background-image:url(https://wallpaperaccess.com/full/2984636.png);
-  background-size:cover;background-position:center;background-attachment:fixed;padding:22px}
+  background:linear-gradient(160deg,#2a4a7a,#0b0f16 70%) fixed;padding:22px}
 .wrap{max-width:760px;margin:40px auto;background:rgba(8,10,16,.85);border:3px solid #000;border-radius:12px;padding:24px;box-shadow:0 10px 50px #000c}
 h1,.pix,.btn,#play{font-family:'Press Start 2P',ui-monospace,monospace}
 h1{font-size:17px;line-height:1.6;color:#8bd450;text-shadow:2px 2px #000;margin:0 0 16px}
@@ -28,8 +27,8 @@ b{color:#8bd450}
 <h1>Minecraft, in a thread.</h1>
 <p>The whole game is hidden in this thread's links. To run it right here in your browser:</p>
 <ol>
-<li><b>Easiest (online):</b> hit <b>&#8681; auto-fill from github</b> (top-right) &mdash; it grabs every part &mdash; then press <b>Play</b>.</li>
-<li><b>By hand / offline:</b> copy what each link from tweet&nbsp;3 onward opens, paste them <b>all, in order</b>, into the box below (spaces or new lines between parts are fine), then press <b>Play</b>.</li>
+<li><b>Easiest:</b> hit <b>&#8681; auto-fill from github</b> (top-right), then <b>Play</b>.</li>
+<li><b>By hand:</b> paste every part (tweets&nbsp;3 on) into the box in order, then <b>Play</b>. Spaces / new lines between them are fine.</li>
 </ol>
 <textarea id="t" placeholder="paste every part here (tweet 3, then 4, then 5 ...) — or use auto-fill above, then press Play"></textarea>
 <div><button id="play" onclick="go()">&#9654; Play</button><span id="s"></span></div>
@@ -62,6 +61,9 @@ async function go(){
     window.LZMA.decompress(comp,function(html){
       if(typeof html!=="string"){var a="",i=0;for(;i<html.length;i++)a+=String.fromCharCode(html[i]&255);html=decodeURIComponent(escape(a));}
       st("starting minecraft...");
+      // data: URLs disable localStorage -> shim an in-memory store so the game boots
+      var shim='<script>try{localStorage.getItem("_")}catch(e){var m={},s={getItem:k=>k in m?m[k]:null,setItem:(k,v)=>{m[k]=""+v},removeItem:k=>{delete m[k]},clear:()=>{m={}},key:i=>Object.keys(m)[i]||null,get length(){return Object.keys(m).length}};for(var n of["localStorage","sessionStorage"])try{Object.defineProperty(window,n,{value:s})}catch(_){}}<\/script>';
+      html=html.replace("<head>","<head>"+shim);
       document.open();document.write(html);document.close();
     });
   }catch(e){ st("error: "+e.message); }

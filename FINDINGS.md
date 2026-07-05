@@ -41,22 +41,38 @@ stronger codec is possible (weigh the decoder's own size).
 | LZMA −9e | 657,445 | 88 | −25% |
 | brotli −11 | 654,521 | 88 | −26% |
 
-The bundle also appears to carry unused Node crypto polyfills (elliptic / bn.js /
-pbkdf2 / secp256k1) — stripping that dead weight is a promising, orthogonal lever.
+## Optimization: 120 → 44 tweets
+The game (`minified-index.html`, 4.47 MB) is mostly one library.
 
-## Current thread
-`build_thread.py` emits `TWEETS/`:
+1. **Strip the engine down.** Module 470 of the webpack bundle is Babylon.js 4.0.3
+   (2.37 MB, ~69% of the bundle) but the game references only **26 `BABYLON.*`
+   names**. Tree-shaking `@babylonjs/core@4.0.3` to that surface = **806 KB**. Plus
+   the reachable crypto tree (elliptic / bn.js ×7 / ciphers / pbkdf2, dragged in by a
+   single `randomBytes` call) is stubbed out (~543 KB). Result: `game-shaken.html`,
+   **2.32 MB**. Verified in headless Chrome: world renders, menus / place / break /
+   movement work, 0 fatal errors.
+2. **Better codec.** LZMA1 (`lzma` npm, mode 9) → **310,866 B → 42 base64url parts**
+   (deflate would be ~74). Decoded in-browser by an embedded LZMA-JS engine, so we're
+   not limited to native `DecompressionStream`.
+
+## Current thread — 44 tweets
+`build_thread.py` emits `TWEETS/` (compose links) and `unlinked-tweets/` (the decoded
+`text=` of each, for local testing):
 - `tweet-001` hook: visible text + a compose link with the explanation.
-- `tweet-002` decoder: a compose link carrying `data:text/html;base64,<decoder>`.
-- `tweet-003…` the game as base64url(deflate-raw) parts.
+- `tweet-002` decoder: `data:text/html;base64,<bootstrap>`. The bootstrap is a tiny
+  page that inflates (native `deflate-raw`) the real decoder — which embeds the LZMA
+  engine, so **decode works fully offline**. `TWEETS/manifest.txt` = the part count.
+- `tweet-003…` the game as base64url(LZMA) parts.
 
-Reader flow: open tweet 2's `data:` URL (the decoder), paste tweets 3+ into it, hit
-Play — the decoder base64url-decodes, inflates via `DecompressionStream('deflate-raw')`,
-and `document.write`s the game. Verified: byte-exact round-trip, and every link returns
-HTTP 200 under a realistic logged-in header set.
+Decoder (`scripts/decoder_page.html` → deflated into `decoder_bootstrap.html`): paste
+the parts (or **auto-fill from GitHub**) → Play → LZMA-decodes → `document.write`s the
+game. A **play-directly** link points at kuber.studio/minicraft. Font (Press Start 2P)
+and wallpaper are progressive — CSS falls back if offline. Verified: byte-exact
+reconstruction, boots in-browser online **and** offline, all links HTTP 200 logged-in.
 
 ## Tooling (`scripts/`)
 - `compose_link.py` — any text/file → one compose link.
-- `thread_pack.py` / `thread_unpack.py` — file ⇄ thread of compose links (verifier).
-- `build_thread.py` — the full `TWEETS/` thread (hook + decoder + parts).
-- `decoder.html` — the self-contained decoder page (paste parts, Play, confetti).
+- `thread_pack.py` / `thread_unpack.py` — file ⇄ deflate thread (generic verifier).
+- `build_decoder.mjs` — inline LZMA engine + UI → deflate → self-extracting bootstrap.
+- `build_thread.py` — the full `TWEETS/` + `unlinked-tweets/` thread.
+- `decoder_page.html`, `lzma-d-min.js` — decoder source + embedded LZMA engine.

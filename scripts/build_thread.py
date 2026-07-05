@@ -73,8 +73,12 @@ def main():
     else:
         co = zlib.compressobj(level=9, wbits=-15); comp = co.compress(data) + co.flush(); how = "zlib -9"
 
+    # Game parts are posted as DIRECT tweet text (not compose links), so each can be up to
+    # X's long-post limit (25,000 chars; base64url is ASCII, weight 1). That's ~2.4x more than
+    # a compose link's ~10k URL cap -> far fewer tweets. (Posting these needs an X Premium acct.)
+    DATA_CHUNK = 24000
     payload = b64url(comp)
-    chunks = [payload[i:i + MAXCHUNK] for i in range(0, len(payload), MAXCHUNK)]
+    chunks = [payload[i:i + DATA_CHUNK] for i in range(0, len(payload), DATA_CHUNK)]
 
     decoder_html = open(args.decoder, "rb").read()
     decoder_b64 = base64.b64encode(decoder_html).decode()   # standard base64 -> data:text/html;base64,
@@ -103,19 +107,21 @@ def main():
           "and paste it into your address bar:\n\n" + link_for_text(decoder_data_url),
           decoder_data_url)
     for i, c in enumerate(chunks):
-        write(f"tweet-{i + 3:03d}.txt", PREFIX + c, c)   # base64url needs no url-encoding
+        write(f"tweet-{i + 3:03d}.txt", c, c)   # raw base64url as direct tweet text (Premium long post)
 
     # manifest = number of game parts, so the decoder's "auto-fill from github" knows how many to fetch
     with open(os.path.join(args.outdir, "manifest.txt"), "w", encoding="utf-8") as f:
         f.write(str(len(chunks)))
 
-    longest = max(len(c.split("\n")[-1]) for _, c in files)
+    link_len = max(len(c.split("\n")[-1]) for n, c in files if n in ("tweet-001.txt", "tweet-002.txt"))
+    data_len = max((len(c) for n, c in files if n not in ("tweet-001.txt", "tweet-002.txt")), default=0)
     print(f"input           : {len(data):>12,} bytes")
     print(f"raw DEFLATE     : {len(comp):>12,} bytes  ({how})")
     print(f"decoder.html    : {len(decoder_html):>12,} bytes  -> base64 {len(decoder_b64):,} chars (fits 1 tweet)")
-    print(f"game chunks     : {len(chunks):>12} tweets")
+    print(f"game chunks     : {len(chunks):>12} tweets  (direct text, up to 24,000 chars each)")
     print(f"TOTAL THREAD    : {len(files):>12} tweets  (1 hook + 1 decoder + {len(chunks)} data)")
-    print(f"longest link    : {longest:>12,} chars  (ceiling {URL_CEIL:,}) {'OK' if longest <= URL_CEIL else 'OVER!'}")
+    print(f"longest link    : {link_len:>12,} chars  (URL cap {URL_CEIL:,}) {'OK' if link_len <= URL_CEIL else 'OVER!'}")
+    print(f"longest data tw : {data_len:>12,} chars  (X premium 25,000) {'OK' if data_len <= 25000 else 'OVER!'}")
     print(f"written to      : {args.outdir}/  and  {args.unlinked}/ (decoded, for local testing)")
 
 

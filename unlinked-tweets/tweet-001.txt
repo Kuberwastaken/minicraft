@@ -1,6 +1,6 @@
 yes, it literally is. the whole game is in this thread.
 
-it works by abusing X's compose-link trick: every link counts as just 23 characters no matter how long the URL really is, so each link below smuggles a chunk of data past the character limit. this is probably the most compressed copy of Minecraft Classic but... even so, it takes 42 of them to hold the whole game.
+it works by abusing X's compose-link trick: every link counts as just 23 characters no matter how long the URL really is, so each link below smuggles a chunk of data past the character limit. this is probably the most compressed copy of Minecraft Classic but... even so, it takes 43 of them to hold the whole game.
 
 how the thread is laid out:
 tweet 2 is the decoder, a tiny self-contained page.

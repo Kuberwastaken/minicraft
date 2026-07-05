@@ -1,6 +1,6 @@
 yes, this post is literally a custom copy of Minecraft Classic that I call Minicraft
 
-it works by abusing X's compose-link trick (shoutout @rebane2001): a link counts as just 23 characters no matter how long its URL is, so tweet 2 smuggles a whole decoder inside one link. the game itself is too big for that, so it rides in the rest of the thread as raw compressed text. this is probably the most compressed copy of Minecraft Classic but.. even so, it takes 20 tweets to hold the whole game.
+it works by abusing X's compose-link trick (shoutout @rebane2001): tweet 2's link opens a separate, easier-to-interact-with viewer (the decoder). the game itself rides in the rest of the thread as raw compressed text. this is probably the most compressed copy of Minecraft Classic but.. even so, it takes 20 tweets to hold the whole game.
 
 how this thread is laid out:
 tweet 2 is the decoder, a tiny self-contained page hidden in a link.

@@ -1,0 +1,15 @@
+yes, it literally is. the whole game is in this thread.
+
+it works by abusing X's compose-link trick: every link counts as just 23 characters no matter how long the URL really is, so each link below smuggles a chunk of data past the character limit. this is probably the most compressed copy of Minecraft Classic but... even so, it takes 42 of them to hold the whole game.
+
+how the thread is laid out:
+tweet 2 is the decoder, a tiny self-contained page.
+tweets 3 and onward are the game itself, split into parts.
+
+to play:
+1) open tweet 2's link, copy the whole  data:text/html;base64,...  line it shows, and paste it into your browser's address bar. that opens the decoder (or save that line as decoder.html and open it).
+2) in the decoder, hit 'auto-fill from github' (it grabs every part for you), or paste tweets 3-on in yourself, then hit Play. Minecraft runs right in your browser, nothing leaves your machine.
+
+not the copyright holder. Minecraft is (c) Mojang / Microsoft. this is a technical art demo, unaffiliated and not endorsed.
+
+made with funmaxxing by Kuber Mehta (kuber.studio)

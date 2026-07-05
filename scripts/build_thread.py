@@ -39,8 +39,9 @@ EXPLAIN = (
     "1) open tweet 2's link, copy the whole  data:text/html;base64,...  line it "
     "shows, and paste it into your browser's address bar. that opens the decoder "
     "(or save that line as decoder.html and open it).\n"
-    "2) copy every part after it (tweets 3 and on), paste them all into the decoder, "
-    "and hit Play. Minecraft runs right in your browser, nothing leaves your machine.\n\n"
+    "2) in the decoder, hit 'auto-fill from github' (it grabs every part for you), "
+    "or paste tweets 3-on in yourself, then hit Play. Minecraft runs right in your "
+    "browser, nothing leaves your machine.\n\n"
     "not the copyright holder. Minecraft is (c) Mojang / Microsoft. this is a "
     "technical art demo, unaffiliated and not endorsed.\n\n"
     "made with funmaxxing by Kuber Mehta (kuber.studio)"
@@ -61,7 +62,9 @@ def main():
     ap.add_argument("input")
     ap.add_argument("-o", "--outdir", default="TWEETS")
     ap.add_argument("--decoder", default=os.path.join(os.path.dirname(__file__), "decoder.html"))
-    ap.add_argument("--deflate", help="precompressed raw-DEFLATE blob (e.g. zopfli); else zlib -9")
+    ap.add_argument("--deflate", help="precompressed blob to ship as-is (e.g. zopfli deflate or LZMA); else zlib -9")
+    ap.add_argument("--unlinked", default="unlinked-tweets",
+                    help="also write the decoded text= of each tweet here (for local testing without X)")
     args = ap.parse_args()
 
     data = open(args.input, "rb").read()
@@ -77,22 +80,31 @@ def main():
     decoder_b64 = base64.b64encode(decoder_html).decode()   # standard base64 -> data:text/html;base64,
 
     os.makedirs(args.outdir, exist_ok=True)
+    os.makedirs(args.unlinked, exist_ok=True)
     files = []
 
-    def write(name, content):
+    def write(name, link, unlinked):
+        # link (compose URL / tweet text) -> TWEETS/ ; unlinked (decoded text=) -> unlinked-tweets/
         with open(os.path.join(args.outdir, name), "w", encoding="utf-8") as f:
-            f.write(content)
-        files.append((name, content))
+            f.write(link)
+        with open(os.path.join(args.unlinked, name), "w", encoding="utf-8") as f:
+            f.write(unlinked)
+        files.append((name, link))
 
+    explain = EXPLAIN.format(n=len(chunks))
     decoder_data_url = "data:text/html;base64," + decoder_b64
 
-    write("tweet-001.txt", HOOK + "\n\n" + link_for_text(EXPLAIN.format(n=len(chunks))))
+    write("tweet-001.txt", HOOK + "\n\n" + link_for_text(explain), explain)
     write("tweet-002.txt",
           "tweet 2 is the decoder. open this link, copy the data: URL it shows, "
-          "and paste it into your address bar:\n\n"
-          + link_for_text(decoder_data_url))
+          "and paste it into your address bar:\n\n" + link_for_text(decoder_data_url),
+          decoder_data_url)
     for i, c in enumerate(chunks):
-        write(f"tweet-{i + 3:03d}.txt", PREFIX + c)   # base64url is already URL-safe
+        write(f"tweet-{i + 3:03d}.txt", PREFIX + c, c)   # base64url needs no url-encoding
+
+    # manifest = number of game parts, so the decoder's "auto-fill from github" knows how many to fetch
+    with open(os.path.join(args.outdir, "manifest.txt"), "w", encoding="utf-8") as f:
+        f.write(str(len(chunks)))
 
     longest = max(len(c.split("\n")[-1]) for _, c in files)
     print(f"input           : {len(data):>12,} bytes")
@@ -101,7 +113,7 @@ def main():
     print(f"game chunks     : {len(chunks):>12} tweets")
     print(f"TOTAL THREAD    : {len(files):>12} tweets  (1 hook + 1 decoder + {len(chunks)} data)")
     print(f"longest link    : {longest:>12,} chars  (ceiling {URL_CEIL:,}) {'OK' if longest <= URL_CEIL else 'OVER!'}")
-    print(f"written to      : {args.outdir}/")
+    print(f"written to      : {args.outdir}/  and  {args.unlinked}/ (decoded, for local testing)")
 
 
 if __name__ == "__main__":

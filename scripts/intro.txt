@@ -1,6 +1,6 @@
 yes, this post is literally a custom copy of Minecraft Classic that I call Minicraft
 
-it works by abusing X's compose-link trick (shoutout Rebane): every link counts as just 23 characters no matter how long the URL really is, so each link below smuggles a chunk of data past the character limit. this is probably the most compressed copy of Minecraft Classic but.. even so, it takes 45 of them to hold the whole game.
+it works by abusing X's compose-link trick (shoutout Rebane): every link counts as just 23 characters no matter how long the URL really is, so each link below smuggles a chunk of data past the character limit. this is probably the most compressed copy of Minecraft Classic but.. even so, it takes {n} of them to hold the whole game.
 
 how this thread is laid out:
 tweet 2 is the decoder, a tiny self-contained page.

@@ -91,7 +91,10 @@ def main():
             f.write(unlinked)
         files.append((name, link))
 
-    explain = EXPLAIN.format(n=len(chunks))
+    # intro text is editable in scripts/intro.txt (survives rebuilds); {n} = total tweets
+    intro_path = os.path.join(os.path.dirname(__file__), "intro.txt")
+    template = open(intro_path, encoding="utf-8").read().rstrip("\n") if os.path.exists(intro_path) else EXPLAIN
+    explain = template.replace("{n}", str(len(chunks) + 2))
     decoder_data_url = "data:text/html;base64," + decoder_b64
 
     write("tweet-001.txt", HOOK + "\n\n" + link_for_text(explain), explain)

@@ -61,7 +61,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("input")
     ap.add_argument("-o", "--outdir", default="TWEETS")
-    ap.add_argument("--decoder", default=os.path.join(os.path.dirname(__file__), "decoder.html"))
+    ap.add_argument("--decoder", default=os.path.join(os.path.dirname(__file__), "decoder_bootstrap.html"))
     ap.add_argument("--deflate", help="precompressed blob to ship as-is (e.g. zopfli deflate or LZMA); else zlib -9")
     ap.add_argument("--unlinked", default="unlinked-tweets",
                     help="also write the decoded text= of each tweet here (for local testing without X)")

@@ -4,7 +4,7 @@
 
 [![Minicraft running from an X post](assets/minicraft-in-a-post.jpg)](https://x.com/kuberwastaken/status/2073746364228673886)
 
-I found this rather cool trick from **[@rebane2001](https://x.com/rebane2001)** on twitter yesterday that sort of reminded me that I was working on this "hard problem" I left 3 months ago of running Minectaft from a tweet.
+I found this rather cool trick from **[@rebane2001](https://x.com/rebane2001)** on twitter yesterday that reminded me that I was working on this "hard problem" I left 3 months ago of running Minectaft from a tweet.
 
 If you do x.com/compose followed by the URL string on your post itself, it'll open up the compose box with those words clearly printed out! Using this I was able to truncade the instructions and my custom decoder (because it's ~20 tweets that need to be consolidated) base64 encoded
 
@@ -135,5 +135,5 @@ The full measured notes live in **[`FINDINGS.md`](FINDINGS.md)**.
 - Minecraft is © **Mojang / Microsoft**. This is an unaffiliated technical-art demo, not
   endorsed by them.
 - The compose-link trick: **[@rebane2001](https://x.com/rebane2001)**.
-- [Minectaft Classic Forever](https://github.com/ManiaDevelopment/Minecraft-Classic-Forever) - Goats for helping me find the actual source to play with
+- [Minecraft Classic Forever](https://github.com/ManiaDevelopment/Minecraft-Classic-Forever) - Goats for helping me find the actual source to play with
 - Made with funmaxxing by **[Kuber Mehta](https://kuber.studio)**.
